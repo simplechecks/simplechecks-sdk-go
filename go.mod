@@ -1,4 +1,4 @@
-module github.com/stainless-sdks/simplechecks-go
+module github.com/simplechecks/simplechecks-sdk-go
 
 go 1.22
 

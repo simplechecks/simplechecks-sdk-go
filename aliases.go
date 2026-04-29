@@ -3,8 +3,8 @@
 package simplechecks
 
 import (
-	"github.com/stainless-sdks/simplechecks-go/internal/apierror"
-	"github.com/stainless-sdks/simplechecks-go/packages/param"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/apierror"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/param"
 )
 
 // aliased to make [param.APIUnion] private when embedding

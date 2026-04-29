@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/http/httputil"
 
-	"github.com/stainless-sdks/simplechecks-go/internal/apijson"
-	"github.com/stainless-sdks/simplechecks-go/packages/respjson"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/apijson"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/respjson"
 )
 
 // Error represents an error that originates from the API, i.e. when a request is

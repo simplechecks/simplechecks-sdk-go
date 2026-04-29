@@ -2,7 +2,7 @@ package apijson
 
 import (
 	"errors"
-	"github.com/stainless-sdks/simplechecks-go/packages/param"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/param"
 	"reflect"
 
 	"github.com/tidwall/gjson"

@@ -11,12 +11,12 @@ import (
 	"slices"
 	"time"
 
-	"github.com/stainless-sdks/simplechecks-go/internal/apijson"
-	"github.com/stainless-sdks/simplechecks-go/internal/apiquery"
-	"github.com/stainless-sdks/simplechecks-go/internal/requestconfig"
-	"github.com/stainless-sdks/simplechecks-go/option"
-	"github.com/stainless-sdks/simplechecks-go/packages/param"
-	"github.com/stainless-sdks/simplechecks-go/packages/respjson"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/apijson"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/apiquery"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/requestconfig"
+	"github.com/simplechecks/simplechecks-sdk-go/option"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/param"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/respjson"
 )
 
 // CRUD for synthetic-monitoring checks.
