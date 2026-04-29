@@ -1,8 +1,8 @@
 package sentinel_test
 
 import (
-	"github.com/stainless-sdks/simplechecks-go/internal/encoding/json/sentinel"
-	"github.com/stainless-sdks/simplechecks-go/packages/param"
+	"github.com/simplechecks/sdk-go/internal/encoding/json/sentinel"
+	"github.com/simplechecks/sdk-go/packages/param"
 	"reflect"
 	"slices"
 	"testing"

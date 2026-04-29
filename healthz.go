@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"slices"
 
-	"github.com/stainless-sdks/simplechecks-go/internal/apijson"
-	"github.com/stainless-sdks/simplechecks-go/internal/requestconfig"
-	"github.com/stainless-sdks/simplechecks-go/option"
-	"github.com/stainless-sdks/simplechecks-go/packages/respjson"
+	"github.com/simplechecks/sdk-go/internal/apijson"
+	"github.com/simplechecks/sdk-go/internal/requestconfig"
+	"github.com/simplechecks/sdk-go/option"
+	"github.com/simplechecks/sdk-go/packages/respjson"
 )
 
 // Liveness + readiness.

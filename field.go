@@ -1,7 +1,7 @@
 package simplechecks
 
 import (
-	"github.com/stainless-sdks/simplechecks-go/packages/param"
+	"github.com/simplechecks/sdk-go/packages/param"
 	"io"
 	"time"
 )

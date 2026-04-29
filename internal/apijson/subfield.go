@@ -1,7 +1,7 @@
 package apijson
 
 import (
-	"github.com/stainless-sdks/simplechecks-go/packages/respjson"
+	"github.com/simplechecks/sdk-go/packages/respjson"
 	"reflect"
 )
 

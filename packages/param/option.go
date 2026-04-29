@@ -3,7 +3,7 @@ package param
 import (
 	"encoding/json"
 	"fmt"
-	shimjson "github.com/stainless-sdks/simplechecks-go/internal/encoding/json"
+	shimjson "github.com/simplechecks/sdk-go/internal/encoding/json"
 	"time"
 )
 

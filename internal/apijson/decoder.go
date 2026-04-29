@@ -7,7 +7,7 @@ package apijson
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stainless-sdks/simplechecks-go/packages/param"
+	"github.com/simplechecks/sdk-go/packages/param"
 	"reflect"
 	"strconv"
 	"sync"

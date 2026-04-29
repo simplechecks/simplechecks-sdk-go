@@ -18,10 +18,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/stainless-sdks/simplechecks-go/internal"
-	"github.com/stainless-sdks/simplechecks-go/internal/apierror"
-	"github.com/stainless-sdks/simplechecks-go/internal/apiform"
-	"github.com/stainless-sdks/simplechecks-go/internal/apiquery"
+	"github.com/simplechecks/sdk-go/internal"
+	"github.com/simplechecks/sdk-go/internal/apierror"
+	"github.com/simplechecks/sdk-go/internal/apiform"
+	"github.com/simplechecks/sdk-go/internal/apiquery"
 )
 
 func getDefaultHeaders() map[string]string {

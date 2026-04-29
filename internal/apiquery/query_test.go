@@ -1,7 +1,7 @@
 package apiquery
 
 import (
-	"github.com/stainless-sdks/simplechecks-go/packages/param"
+	"github.com/simplechecks/sdk-go/packages/param"
 	"net/url"
 	"testing"
 	"time"
