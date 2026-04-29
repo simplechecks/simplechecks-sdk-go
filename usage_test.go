@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/stainless-sdks/simplechecks-go"
-	"github.com/stainless-sdks/simplechecks-go/internal/testutil"
-	"github.com/stainless-sdks/simplechecks-go/option"
+	"github.com/simplechecks/simplechecks-sdk-go"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/testutil"
+	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
 func TestUsage(t *testing.T) {

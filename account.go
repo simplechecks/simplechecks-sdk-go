@@ -8,10 +8,10 @@ import (
 	"slices"
 	"time"
 
-	"github.com/stainless-sdks/simplechecks-go/internal/apijson"
-	"github.com/stainless-sdks/simplechecks-go/internal/requestconfig"
-	"github.com/stainless-sdks/simplechecks-go/option"
-	"github.com/stainless-sdks/simplechecks-go/packages/respjson"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/apijson"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/requestconfig"
+	"github.com/simplechecks/simplechecks-sdk-go/option"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/respjson"
 )
 
 // Account profile and balance.

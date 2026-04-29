@@ -3,8 +3,8 @@ package apijson_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/stainless-sdks/simplechecks-go/internal/apijson"
-	"github.com/stainless-sdks/simplechecks-go/packages/param"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/apijson"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/param"
 	"reflect"
 	"testing"
 )

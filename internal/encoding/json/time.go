@@ -2,7 +2,7 @@
 package json
 
 import (
-	"github.com/stainless-sdks/simplechecks-go/internal/encoding/json/shims"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/encoding/json/shims"
 	"reflect"
 	"time"
 )
