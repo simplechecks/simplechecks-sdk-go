@@ -13,7 +13,7 @@ import (
 
 	"github.com/tidwall/sjson"
 
-	shimjson "github.com/stainless-sdks/simplechecks-go/internal/encoding/json"
+	shimjson "github.com/simplechecks/simplechecks-sdk-go/internal/encoding/json"
 )
 
 var encoders sync.Map // map[encoderEntry]encoderFunc

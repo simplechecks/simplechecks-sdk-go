@@ -14,7 +14,7 @@ import (
 	"encoding"
 	"encoding/base64"
 	"fmt"
-	"github.com/stainless-sdks/simplechecks-go/internal/encoding/json/shims"
+	"github.com/simplechecks/simplechecks-sdk-go/internal/encoding/json/shims"
 	"reflect"
 	"strconv"
 	"strings"

@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stainless-sdks/simplechecks-go"
-	"github.com/stainless-sdks/simplechecks-go/internal"
-	"github.com/stainless-sdks/simplechecks-go/option"
+	"github.com/simplechecks/simplechecks-sdk-go"
+	"github.com/simplechecks/simplechecks-sdk-go/internal"
+	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
 type closureTransport struct {

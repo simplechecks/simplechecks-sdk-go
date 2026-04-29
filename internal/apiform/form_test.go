@@ -2,7 +2,7 @@ package apiform
 
 import (
 	"bytes"
-	"github.com/stainless-sdks/simplechecks-go/packages/param"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/param"
 	"io"
 	"mime/multipart"
 	"strings"
