@@ -23,6 +23,8 @@ import (
 // the [NewCheckService] method instead.
 type CheckService struct {
 	Options []option.RequestOption
+	// Per-check alert configuration + test-fire endpoint (PR-Alerts/1).
+	Alerts *CheckAlertService
 }
 
 // NewCheckService generates a new service that applies the given options to each
@@ -31,6 +33,7 @@ type CheckService struct {
 func NewCheckService(opts ...option.RequestOption) (r *CheckService) {
 	r = &CheckService{}
 	r.Options = opts
+	r.Alerts = NewCheckAlertService(opts...)
 	return
 }
 
