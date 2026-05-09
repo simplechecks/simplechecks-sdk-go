@@ -13,7 +13,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-func TestAccountGet(t *testing.T) {
+func TestCheckoutSessionNew(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -24,7 +24,9 @@ func TestAccountGet(t *testing.T) {
 	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
 	)
-	_, err := client.Account.Get(context.TODO())
+	_, err := client.CheckoutSessions.New(context.TODO(), simplechecksgo.CheckoutSessionNewParams{
+		BundleSKU: simplechecksgo.F(simplechecksgo.CheckoutSessionNewParamsBundleSKUStarter),
+	})
 	if err != nil {
 		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {
