@@ -23,6 +23,7 @@ func TestAccountGet(t *testing.T) {
 	}
 	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Account.Get(context.TODO())
 	if err != nil {

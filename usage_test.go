@@ -22,11 +22,12 @@ func TestUsage(t *testing.T) {
 	}
 	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
-	account, err := client.Account.Get(context.TODO())
+	checks, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{})
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	t.Logf("%+v\n", account.Typeid)
+	t.Logf("%+v\n", checks.Checks)
 }

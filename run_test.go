@@ -23,6 +23,7 @@ func TestRunGet(t *testing.T) {
 	}
 	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Runs.Get(context.TODO(), "run_sew2vlfw09vz231q9mz9al2ecd")
 	if err != nil {
@@ -44,6 +45,7 @@ func TestRunListWithOptionalParams(t *testing.T) {
 	}
 	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Runs.List(context.TODO(), simplechecksgo.RunListParams{
 		CheckID: simplechecksgo.F("check_id"),
@@ -71,6 +73,7 @@ func TestRunAggregatesWithOptionalParams(t *testing.T) {
 	}
 	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Runs.Aggregates(context.TODO(), simplechecksgo.RunAggregatesParams{
 		Bucket:   simplechecksgo.F(simplechecksgo.RunAggregatesParamsBucketMinute),

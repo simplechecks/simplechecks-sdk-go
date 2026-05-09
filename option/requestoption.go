@@ -272,3 +272,11 @@ func WithEnvironmentProduction() RequestOption {
 func WithEnvironmentLocal() RequestOption {
 	return requestconfig.WithDefaultBaseURL("http://localhost:8080/")
 }
+
+// WithAPIKey returns a RequestOption that sets the client setting "api_key".
+func WithAPIKey(value string) RequestOption {
+	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
+		r.APIKey = value
+		return r.Apply(WithHeader("authorization", fmt.Sprintf("Bearer %s", r.APIKey)))
+	})
+}
