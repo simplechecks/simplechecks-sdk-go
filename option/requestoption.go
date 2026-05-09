@@ -15,7 +15,7 @@ import (
 	"github.com/tidwall/sjson"
 )
 
-// RequestOption is an option for the requests made by the simplechecks API Client
+// RequestOption is an option for the requests made by the simple-checks API Client
 // which can be supplied to clients, services, and methods. You can read more about this functional
 // options pattern in our [README].
 //
@@ -168,7 +168,7 @@ func WithQueryDel(key string) RequestOption {
 // The key accepts a string as defined by the [sjson format].
 //
 // [sjson format]: https://github.com/tidwall/sjson
-func WithJSONSet(key string, value any) RequestOption {
+func WithJSONSet(key string, value interface{}) RequestOption {
 	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) (err error) {
 		var b []byte
 
@@ -266,17 +266,9 @@ func WithEnvironmentProduction() RequestOption {
 	return requestconfig.WithDefaultBaseURL("https://api.simplechecks.com/")
 }
 
-// WithEnvironmentEnvironment1 returns a RequestOption that sets the current
-// environment to be the "environment_1" environment. An environment specifies which base URL
+// WithEnvironmentLocal returns a RequestOption that sets the current
+// environment to be the "local" environment. An environment specifies which base URL
 // to use by default.
-func WithEnvironmentEnvironment1() RequestOption {
+func WithEnvironmentLocal() RequestOption {
 	return requestconfig.WithDefaultBaseURL("http://localhost:8080/")
-}
-
-// WithAPIKey returns a RequestOption that sets the client setting "api_key".
-func WithAPIKey(value string) RequestOption {
-	return requestconfig.RequestOptionFunc(func(r *requestconfig.RequestConfig) error {
-		r.APIKey = value
-		return nil
-	})
 }

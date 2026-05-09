@@ -13,36 +13,37 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-// CRUD for synthetic-monitoring checks.
+// Manage personal access tokens (PATs).
 //
-// CheckService contains methods and other services that help with interacting with
+// KeyService contains methods and other services that help with interacting with
 // the simple-checks API.
 //
 // Note, unlike clients, this service does not read variables from the environment
 // automatically. You should not instantiate this service directly, and instead use
-// the [NewCheckService] method instead.
-type CheckService struct {
+// the [NewKeyService] method instead.
+type KeyService struct {
 	Options []option.RequestOption
 }
 
-// NewCheckService generates a new service that applies the given options to each
+// NewKeyService generates a new service that applies the given options to each
 // request. These options are applied after the parent client's options (if there
 // is one), and before any request-specific options.
-func NewCheckService(opts ...option.RequestOption) (r *CheckService) {
-	r = &CheckService{}
+func NewKeyService(opts ...option.RequestOption) (r *KeyService) {
+	r = &KeyService{}
 	r.Options = opts
 	return
 }
 
-// Disables the check. Requires the `checks:write` scope.
-func (r *CheckService) Delete(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
+// Marks the key revoked. Subsequent ext_authz checks reject requests authenticated
+// with this key. The row stays for audit. Requires the `keys:write` scope.
+func (r *KeyService) Revoke(ctx context.Context, id string, opts ...option.RequestOption) (err error) {
 	opts = slices.Concat(r.Options, opts)
 	opts = append([]option.RequestOption{option.WithHeader("Accept", "*/*")}, opts...)
 	if id == "" {
 		err = errors.New("missing required id parameter")
 		return err
 	}
-	path := fmt.Sprintf("v1/checks/%s", id)
+	path := fmt.Sprintf("v1/keys/%s", id)
 	err = requestconfig.ExecuteNewRequest(ctx, http.MethodDelete, path, nil, nil, opts...)
 	return err
 }

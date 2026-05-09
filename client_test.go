@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package simplechecks_test
+package simplechecksgo_test
 
 import (
 	"context"
@@ -25,8 +25,7 @@ func (t *closureTransport) RoundTrip(req *http.Request) (*http.Response, error) 
 
 func TestUserAgentHeader(t *testing.T) {
 	var userAgent string
-	client := simplechecks.NewClient(
-		option.WithAPIKey("My API Key"),
+	client := simplechecksgo.NewClient(
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -38,16 +37,15 @@ func TestUserAgentHeader(t *testing.T) {
 			},
 		}),
 	)
-	_, _ = client.Healthz.Check(context.Background())
-	if userAgent != fmt.Sprintf("Simplechecks/Go %s", internal.PackageVersion) {
+	_, _ = client.Account.Get(context.Background())
+	if userAgent != fmt.Sprintf("SimpleChecks/Go %s", internal.PackageVersion) {
 		t.Errorf("Expected User-Agent to be correct, but got: %#v", userAgent)
 	}
 }
 
 func TestRetryAfter(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := simplechecks.NewClient(
-		option.WithAPIKey("My API Key"),
+	client := simplechecksgo.NewClient(
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -62,7 +60,7 @@ func TestRetryAfter(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Healthz.Check(context.Background())
+	_, err := client.Account.Get(context.Background())
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -80,8 +78,7 @@ func TestRetryAfter(t *testing.T) {
 
 func TestDeleteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := simplechecks.NewClient(
-		option.WithAPIKey("My API Key"),
+	client := simplechecksgo.NewClient(
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -97,7 +94,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeaderDel("X-Stainless-Retry-Count"),
 	)
-	_, err := client.Healthz.Check(context.Background())
+	_, err := client.Account.Get(context.Background())
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -110,8 +107,7 @@ func TestDeleteRetryCountHeader(t *testing.T) {
 
 func TestOverwriteRetryCountHeader(t *testing.T) {
 	retryCountHeaders := make([]string, 0)
-	client := simplechecks.NewClient(
-		option.WithAPIKey("My API Key"),
+	client := simplechecksgo.NewClient(
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -127,7 +123,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 		}),
 		option.WithHeader("X-Stainless-Retry-Count", "42"),
 	)
-	_, err := client.Healthz.Check(context.Background())
+	_, err := client.Account.Get(context.Background())
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -140,8 +136,7 @@ func TestOverwriteRetryCountHeader(t *testing.T) {
 
 func TestRetryAfterMs(t *testing.T) {
 	attempts := 0
-	client := simplechecks.NewClient(
-		option.WithAPIKey("My API Key"),
+	client := simplechecksgo.NewClient(
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -156,7 +151,7 @@ func TestRetryAfterMs(t *testing.T) {
 			},
 		}),
 	)
-	_, err := client.Healthz.Check(context.Background())
+	_, err := client.Account.Get(context.Background())
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
@@ -166,8 +161,7 @@ func TestRetryAfterMs(t *testing.T) {
 }
 
 func TestContextCancel(t *testing.T) {
-	client := simplechecks.NewClient(
-		option.WithAPIKey("My API Key"),
+	client := simplechecksgo.NewClient(
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -179,15 +173,14 @@ func TestContextCancel(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithCancel(context.Background())
 	cancel()
-	_, err := client.Healthz.Check(cancelCtx)
+	_, err := client.Account.Get(cancelCtx)
 	if err == nil {
 		t.Error("Expected there to be a cancel error")
 	}
 }
 
 func TestContextCancelDelay(t *testing.T) {
-	client := simplechecks.NewClient(
-		option.WithAPIKey("My API Key"),
+	client := simplechecksgo.NewClient(
 		option.WithHTTPClient(&http.Client{
 			Transport: &closureTransport{
 				fn: func(req *http.Request) (*http.Response, error) {
@@ -199,7 +192,7 @@ func TestContextCancelDelay(t *testing.T) {
 	)
 	cancelCtx, cancel := context.WithTimeout(context.Background(), 2*time.Millisecond)
 	defer cancel()
-	_, err := client.Healthz.Check(cancelCtx)
+	_, err := client.Account.Get(cancelCtx)
 	if err == nil {
 		t.Error("expected there to be a cancel error")
 	}
@@ -214,8 +207,7 @@ func TestContextDeadline(t *testing.T) {
 	defer cancel()
 
 	go func() {
-		client := simplechecks.NewClient(
-			option.WithAPIKey("My API Key"),
+		client := simplechecksgo.NewClient(
 			option.WithHTTPClient(&http.Client{
 				Transport: &closureTransport{
 					fn: func(req *http.Request) (*http.Response, error) {
@@ -225,7 +217,7 @@ func TestContextDeadline(t *testing.T) {
 				},
 			}),
 		)
-		_, err := client.Healthz.Check(deadlineCtx)
+		_, err := client.Account.Get(deadlineCtx)
 		if err == nil {
 			t.Error("expected there to be a deadline error")
 		}
