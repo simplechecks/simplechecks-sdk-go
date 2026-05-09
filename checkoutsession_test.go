@@ -23,6 +23,7 @@ func TestCheckoutSessionNew(t *testing.T) {
 	}
 	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.CheckoutSessions.New(context.TODO(), simplechecksgo.CheckoutSessionNewParams{
 		BundleSKU: simplechecksgo.F(simplechecksgo.CheckoutSessionNewParamsBundleSKUStarter),

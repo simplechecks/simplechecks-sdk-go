@@ -23,6 +23,7 @@ func TestBalanceGet(t *testing.T) {
 	}
 	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Balance.Get(context.TODO())
 	if err != nil {

@@ -50,13 +50,14 @@ import (
 
 func main() {
 	client := simplechecksgo.NewClient(
-		option.WithEnvironmentLocal(), // defaults to option.WithEnvironmentProduction()
+		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SIMPLECHECKS_API_KEY")
+		option.WithEnvironmentLocal(),   // defaults to option.WithEnvironmentProduction()
 	)
-	account, err := client.Account.Get(context.TODO())
+	checks, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{})
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", account.Typeid)
+	fmt.Printf("%+v\n", checks.Checks)
 }
 
 ```
