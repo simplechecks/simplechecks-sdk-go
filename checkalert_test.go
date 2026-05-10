@@ -74,9 +74,9 @@ func TestCheckAlertReplaceWithOptionalParams(t *testing.T) {
 		"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e",
 		simplechecksgo.CheckAlertReplaceParams{
 			AlertConfig: simplechecksgo.AlertConfigParam{
-				Channels: simplechecksgo.F([]simplechecksgo.AlertConfigChannelParam{{
+				Channels: simplechecksgo.F([]simplechecksgo.AlertChannelParam{{
 					Target: simplechecksgo.F("target"),
-					Type:   simplechecksgo.F(simplechecksgo.AlertConfigChannelsTypeEmail),
+					Type:   simplechecksgo.F(simplechecksgo.AlertChannelTypeEmail),
 					Config: simplechecksgo.F(map[string]interface{}{
 						"foo": "bar",
 					}),
@@ -87,7 +87,7 @@ func TestCheckAlertReplaceWithOptionalParams(t *testing.T) {
 				Enabled:                      simplechecksgo.F(true),
 				AccountID:                    simplechecksgo.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
 				CheckID:                      simplechecksgo.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-				MaintenanceWindows: simplechecksgo.F([]simplechecksgo.AlertConfigMaintenanceWindowParam{{
+				MaintenanceWindows: simplechecksgo.F([]simplechecksgo.MaintenanceWindowParam{{
 					EndUnixMs:   simplechecksgo.F(int64(0)),
 					StartUnixMs: simplechecksgo.F(int64(0)),
 				}}),
