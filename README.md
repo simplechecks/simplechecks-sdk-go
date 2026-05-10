@@ -53,11 +53,11 @@ func main() {
 		option.WithAPIKey("My API Key"), // defaults to os.LookupEnv("SIMPLECHECKS_API_KEY")
 		option.WithEnvironmentLocal(),   // defaults to option.WithEnvironmentProduction()
 	)
-	page, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{})
+	checks, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{})
 	if err != nil {
 		panic(err.Error())
 	}
-	fmt.Printf("%+v\n", page)
+	fmt.Printf("%+v\n", checks.Checks)
 }
 
 ```
@@ -162,33 +162,8 @@ This library provides some conveniences for working with paginated list endpoint
 
 You can use `.ListAutoPaging()` methods to iterate through items across all pages:
 
-```go
-iter := client.Checks.ListAutoPaging(context.TODO(), simplechecksgo.CheckListParams{})
-// Automatically fetches more pages as needed.
-for iter.Next() {
-	checkListResponse := iter.Current()
-	fmt.Printf("%+v\n", checkListResponse)
-}
-if err := iter.Err(); err != nil {
-	panic(err.Error())
-}
-```
-
 Or you can use simple `.List()` methods to fetch a single page and receive a standard response object
 with additional helper methods like `.GetNextPage()`, e.g.:
-
-```go
-page, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{})
-for page != nil {
-	for _, check := range page.data {
-		fmt.Printf("%+v\n", check)
-	}
-	page, err = page.GetNextPage()
-}
-if err != nil {
-	panic(err.Error())
-}
-```
 
 ### Errors
 

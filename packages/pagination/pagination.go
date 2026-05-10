@@ -12,6 +12,7 @@ import (
 )
 
 type Offset[T any] struct {
+	Data       []T        `json:"data"`
 	NextOffset int64      `json:"next_offset" api:"nullable"`
 	JSON       offsetJSON `json:"-"`
 	cfg        *requestconfig.RequestConfig
@@ -20,6 +21,7 @@ type Offset[T any] struct {
 
 // offsetJSON contains the JSON metadata for the struct [Offset[T]]
 type offsetJSON struct {
+	Data        apijson.Field
 	NextOffset  apijson.Field
 	raw         string
 	ExtraFields map[string]apijson.Field
@@ -37,7 +39,7 @@ func (r offsetJSON) RawJSON() string {
 // there is no next page, this function will return a 'nil' for the page value, but
 // will not return an error
 func (r *Offset[T]) GetNextPage() (res *Offset[T], err error) {
-	if len(r.data) == 0 {
+	if len(r.Data) == 0 {
 		return nil, nil
 	}
 	cfg := r.cfg.Clone(r.cfg.Context)
@@ -93,17 +95,17 @@ func NewOffsetAutoPager[T any](page *Offset[T], err error) *OffsetAutoPager[T] {
 }
 
 func (r *OffsetAutoPager[T]) Next() bool {
-	if r.page == nil || len(r.page.data) == 0 {
+	if r.page == nil || len(r.page.Data) == 0 {
 		return false
 	}
-	if r.idx >= len(r.page.data) {
+	if r.idx >= len(r.page.Data) {
 		r.idx = 0
 		r.page, r.err = r.page.GetNextPage()
-		if r.err != nil || r.page == nil || len(r.page.data) == 0 {
+		if r.err != nil || r.page == nil || len(r.page.Data) == 0 {
 			return false
 		}
 	}
-	r.cur = r.page.data[r.idx]
+	r.cur = r.page.Data[r.idx]
 	r.run += 1
 	r.idx += 1
 	return true
