@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package simplechecks_test
+package simplechecksgo_test
 
 import (
 	"context"
@@ -14,7 +14,6 @@ import (
 )
 
 func TestAccountGet(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -22,13 +21,13 @@ func TestAccountGet(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := simplechecks.NewClient(
+	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Account.Get(context.TODO())
 	if err != nil {
-		var apierr *simplechecks.Error
+		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {
 			t.Log(string(apierr.DumpRequest(true)))
 		}

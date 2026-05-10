@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.1.0 (2026-05-10)
+
+Full Changelog: [v0.0.2...v0.1.0](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.0.2...v0.1.0)
+
+### Features
+
+* **api:** api update ([b368386](https://github.com/simplechecks/simplechecks-sdk-go/commit/b368386dc5b1971476f91208aac9ef5804d4a2a8))
+* **api:** api update ([ac45217](https://github.com/simplechecks/simplechecks-sdk-go/commit/ac4521784b0ce3af93250a14835887a341cd1a62))
+* **api:** api update ([6c6aca2](https://github.com/simplechecks/simplechecks-sdk-go/commit/6c6aca2ea8a57a6cc854ede539f033f387a799b1))
+* **api:** api update ([7c6a500](https://github.com/simplechecks/simplechecks-sdk-go/commit/7c6a500e688235a6d55bd8a97e52d6a7170b4d45))
+* **api:** api update ([9edf6d3](https://github.com/simplechecks/simplechecks-sdk-go/commit/9edf6d3123fb54b7a444098616076ec55bf52057))
+* **api:** api update ([d7297e4](https://github.com/simplechecks/simplechecks-sdk-go/commit/d7297e429004524f30ab132dd0a0823a3fb7cd0b))
+* **api:** api update ([5f6ca3c](https://github.com/simplechecks/simplechecks-sdk-go/commit/5f6ca3c9987efd41e2d59d4ccbcd3bf6f6e51aae))
+
+
+### Bug Fixes
+
+* **config:** configured contact ([820401e](https://github.com/simplechecks/simplechecks-sdk-go/commit/820401ea3f13af115651d890437898f67cd8f244))
+* **go:** avoid panic when http.DefaultTransport is wrapped ([91c078f](https://github.com/simplechecks/simplechecks-sdk-go/commit/91c078fb65d1b5bbffc42bd23f3cee1f4f3e78a0))
+
+
+### Chores
+
+* avoid embedding reflect.Type for dead code elimination ([42edc8a](https://github.com/simplechecks/simplechecks-sdk-go/commit/42edc8af88633037a29bab2ca4f8e7c82f292a0a))
+* redact api-key headers in debug logs ([94c0dc0](https://github.com/simplechecks/simplechecks-sdk-go/commit/94c0dc0f9874f61411a4a9edd4ac3f6a78caebba))
+
 ## 0.0.2 (2026-04-29)
 
 Full Changelog: [v0.0.1...v0.0.2](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.0.1...v0.0.2)

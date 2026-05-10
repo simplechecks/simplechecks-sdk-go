@@ -1,10 +1,9 @@
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-package simplechecks_test
+package simplechecksgo_test
 
 import (
 	"context"
-	"errors"
 	"os"
 	"testing"
 
@@ -13,8 +12,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-func TestHealthzCheck(t *testing.T) {
-	t.Skip("Mock server tests are disabled")
+func TestManualPagination(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -22,16 +20,25 @@ func TestHealthzCheck(t *testing.T) {
 	if !testutil.CheckTestServer(t, baseURL) {
 		return
 	}
-	client := simplechecks.NewClient(
+	client := simplechecksgo.NewClient(
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Healthz.Check(context.TODO())
+	page, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{})
 	if err != nil {
-		var apierr *simplechecks.Error
-		if errors.As(err, &apierr) {
-			t.Log(string(apierr.DumpRequest(true)))
-		}
 		t.Fatalf("err should be nil: %s", err.Error())
+	}
+	for _, check := range page.Checks {
+		t.Logf("%+v\n", check.ID)
+	}
+	// The mock server isn't going to give us real pagination
+	page, err = page.GetNextPage()
+	if err != nil {
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+	if page != nil {
+		for _, check := range page.Checks {
+			t.Logf("%+v\n", check.ID)
+		}
 	}
 }
