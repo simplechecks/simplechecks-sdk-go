@@ -12,7 +12,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-func TestUsage(t *testing.T) {
+func TestAutoPagination(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -24,10 +24,13 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	page, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{})
-	if err != nil {
-		t.Error(err)
-		return
+	iter := client.Checks.ListAutoPaging(context.TODO(), simplechecksgo.CheckListParams{})
+	// The mock server isn't going to give us real pagination
+	for i := 0; i < 3 && iter.Next(); i++ {
+		check := iter.Current()
+		t.Logf("%+v\n", check.Checks)
 	}
-	t.Logf("%+v\n", page)
+	if err := iter.Err(); err != nil {
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
 }
