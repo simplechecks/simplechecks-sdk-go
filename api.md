@@ -60,6 +60,17 @@ Methods:
 - <code title="get /v1/runs/aggregates">client.Runs.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#RunService.Aggregates">Aggregates</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#RunAggregatesParams">RunAggregatesParams</a>) (\*<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#RunAggregatesResponse">RunAggregatesResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 - <code title="get /v1/runs/{id}/logs">client.Runs.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#RunService.Logs">Logs</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, id <a href="https://pkg.go.dev/builtin#string">string</a>) (\*<a href="https://pkg.go.dev/builtin#io.Reader">io.Reader</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
+# Incidents
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#Incident">Incident</a>
+- <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentListResponse">IncidentListResponse</a>
+
+Methods:
+
+- <code title="get /v1/incidents">client.Incidents.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentListParams">IncidentListParams</a>) (\*<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentListResponse">IncidentListResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
 # Keys
 
 Response Types:
