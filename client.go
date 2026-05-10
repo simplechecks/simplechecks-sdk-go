@@ -24,6 +24,8 @@ type Client struct {
 	Checks *CheckService
 	// Read-only access to past check executions.
 	Runs *RunService
+	// Read-only incident timeline derived from alert state.
+	Incidents *IncidentService
 	// Manage personal access tokens (PATs).
 	Keys *KeyService
 	// Run-credit balance + Stripe Checkout for top-ups.
@@ -65,6 +67,7 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.Account = NewAccountService(opts...)
 	r.Checks = NewCheckService(opts...)
 	r.Runs = NewRunService(opts...)
+	r.Incidents = NewIncidentService(opts...)
 	r.Keys = NewKeyService(opts...)
 	r.Balance = NewBalanceService(opts...)
 	r.CheckoutSessions = NewCheckoutSessionService(opts...)
