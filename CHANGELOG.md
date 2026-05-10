@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (2026-05-10)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** api update ([d9c6886](https://github.com/simplechecks/simplechecks-sdk-go/commit/d9c6886596ec012a563ad413fcab4da1891589ca))
+
 ## 0.1.0 (2026-05-10)
 
 Full Changelog: [v0.0.2...v0.1.0](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.0.2...v0.1.0)
