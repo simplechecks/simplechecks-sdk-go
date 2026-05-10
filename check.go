@@ -16,6 +16,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/internal/param"
 	"github.com/simplechecks/simplechecks-sdk-go/internal/requestconfig"
 	"github.com/simplechecks/simplechecks-sdk-go/option"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/pagination"
 )
 
 // CRUD for synthetic-monitoring checks.
@@ -80,11 +81,28 @@ func (r *CheckService) Update(ctx context.Context, id string, body CheckUpdatePa
 // Returns the caller's checks with simple offset pagination. `next_offset` is set
 // when a full page was returned and zero when there's no more data. Requires the
 // `checks:read` scope.
-func (r *CheckService) List(ctx context.Context, query CheckListParams, opts ...option.RequestOption) (res *CheckListResponse, err error) {
+func (r *CheckService) List(ctx context.Context, query CheckListParams, opts ...option.RequestOption) (res *pagination.Offset[Check], err error) {
+	var raw *http.Response
 	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/checks"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
-	return res, err
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// Returns the caller's checks with simple offset pagination. `next_offset` is set
+// when a full page was returned and zero when there's no more data. Requires the
+// `checks:read` scope.
+func (r *CheckService) ListAutoPaging(ctx context.Context, query CheckListParams, opts ...option.RequestOption) *pagination.OffsetAutoPager[Check] {
+	return pagination.NewOffsetAutoPager(r.List(ctx, query, opts...))
 }
 
 // Disables the check. Requires the `checks:write` scope.
@@ -329,31 +347,6 @@ type MaintenanceWindowParam struct {
 
 func (r MaintenanceWindowParam) MarshalJSON() (data []byte, err error) {
 	return apijson.MarshalRoot(r)
-}
-
-type CheckListResponse struct {
-	Checks []Check `json:"checks" api:"required"`
-	// Offset to pass on the next request to continue pagination. Zero (or absent) when
-	// there's no more data.
-	NextOffset int64                 `json:"next_offset"`
-	JSON       checkListResponseJSON `json:"-"`
-}
-
-// checkListResponseJSON contains the JSON metadata for the struct
-// [CheckListResponse]
-type checkListResponseJSON struct {
-	Checks      apijson.Field
-	NextOffset  apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *CheckListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r checkListResponseJSON) RawJSON() string {
-	return r.raw
 }
 
 type CheckNewParams struct {
