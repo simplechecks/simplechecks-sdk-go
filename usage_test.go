@@ -24,10 +24,10 @@ func TestUsage(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	page, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{})
+	checks, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{})
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	t.Logf("%+v\n", page)
+	t.Logf("%+v\n", checks.Checks)
 }

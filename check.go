@@ -16,7 +16,6 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/internal/param"
 	"github.com/simplechecks/simplechecks-sdk-go/internal/requestconfig"
 	"github.com/simplechecks/simplechecks-sdk-go/option"
-	"github.com/simplechecks/simplechecks-sdk-go/packages/pagination"
 )
 
 // CRUD for synthetic-monitoring checks.
@@ -81,28 +80,11 @@ func (r *CheckService) Update(ctx context.Context, id string, body CheckUpdatePa
 // Returns the caller's checks with simple offset pagination. `next_offset` is set
 // when a full page was returned and zero when there's no more data. Requires the
 // `checks:read` scope.
-func (r *CheckService) List(ctx context.Context, query CheckListParams, opts ...option.RequestOption) (res *pagination.Offset[CheckListResponse], err error) {
-	var raw *http.Response
+func (r *CheckService) List(ctx context.Context, query CheckListParams, opts ...option.RequestOption) (res *CheckListResponse, err error) {
 	opts = slices.Concat(r.Options, opts)
-	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/checks"
-	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
-	if err != nil {
-		return nil, err
-	}
-	err = cfg.Execute()
-	if err != nil {
-		return nil, err
-	}
-	res.SetPageConfig(cfg, raw)
-	return res, nil
-}
-
-// Returns the caller's checks with simple offset pagination. `next_offset` is set
-// when a full page was returned and zero when there's no more data. Requires the
-// `checks:read` scope.
-func (r *CheckService) ListAutoPaging(ctx context.Context, query CheckListParams, opts ...option.RequestOption) *pagination.OffsetAutoPager[CheckListResponse] {
-	return pagination.NewOffsetAutoPager(r.List(ctx, query, opts...))
+	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
+	return res, err
 }
 
 // Disables the check. Requires the `checks:write` scope.
