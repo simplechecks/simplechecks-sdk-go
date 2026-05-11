@@ -32,6 +32,10 @@ type Client struct {
 	Balance *BalanceService
 	// Run-credit balance + Stripe Checkout for top-ups.
 	CheckoutSessions *CheckoutSessionService
+	// Manage who has access to an account and at what role (PR-Members/2). Five roles:
+	// owner / admin / member / billing / viewer. Owner is the strict superset of all
+	// other roles' scopes; every account always has at least one owner.
+	Members *MemberService
 }
 
 // DefaultClientOptions read from the environment (SIMPLECHECKS_API_KEY,
@@ -71,6 +75,7 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.Keys = NewKeyService(opts...)
 	r.Balance = NewBalanceService(opts...)
 	r.CheckoutSessions = NewCheckoutSessionService(opts...)
+	r.Members = NewMemberService(opts...)
 
 	return
 }
