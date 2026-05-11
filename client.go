@@ -36,6 +36,10 @@ type Client struct {
 	// owner / admin / member / billing / viewer. Owner is the strict superset of all
 	// other roles' scopes; every account always has at least one owner.
 	Members *MemberService
+	// Catalog of (provider, location) deployments Simple Checks runs checks from, with
+	// geographic metadata + live status. Used to drive the region picker and the
+	// dashboard's locations map.
+	Locations *LocationService
 }
 
 // DefaultClientOptions read from the environment (SIMPLECHECKS_API_KEY,
@@ -76,6 +80,7 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.Balance = NewBalanceService(opts...)
 	r.CheckoutSessions = NewCheckoutSessionService(opts...)
 	r.Members = NewMemberService(opts...)
+	r.Locations = NewLocationService(opts...)
 
 	return
 }
