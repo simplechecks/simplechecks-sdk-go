@@ -281,9 +281,16 @@ type Check struct {
 	ArtifactURL string `json:"artifact_url"`
 	// Per-check-type configuration blob. Opaque on the wire.
 	Config map[string]interface{} `json:"config"`
-	// Region/location on read responses is empty; populated on create requests only.
+	// Legacy: the first location's provider-native id. Same back-compat caveats as
+	// `provider`. Consult `locations`.
 	Location string `json:"location"`
-	// Cloud provider on read responses is empty; populated on create requests only.
+	// All locations the check runs from, in wire form (`provider:location`, e.g.
+	// `aws:us-east-1`). Element 0 is the deterministic "primary" — order matches
+	// creation.
+	Locations []string `json:"locations"`
+	// Legacy: the first location's provider, mirrors `locations[0]` split. Empty on
+	// read for multi-location checks (consult `locations` instead). Kept for one
+	// release cycle of SDK back-compat.
 	Provider string    `json:"provider"`
 	JSON     checkJSON `json:"-"`
 }
@@ -304,6 +311,7 @@ type checkJSON struct {
 	ArtifactURL   apijson.Field
 	Config        apijson.Field
 	Location      apijson.Field
+	Locations     apijson.Field
 	Provider      apijson.Field
 	raw           string
 	ExtraFields   map[string]apijson.Field
@@ -350,18 +358,23 @@ func (r MaintenanceWindowParam) MarshalJSON() (data []byte, err error) {
 }
 
 type CheckNewParams struct {
-	Enabled param.Field[bool] `json:"enabled" api:"required"`
-	// Provider-specific region/location.
-	Location param.Field[string] `json:"location" api:"required"`
-	Name     param.Field[string] `json:"name" api:"required"`
-	// Cloud provider (`mock`, `ec2`, `ovh`, `azure`, `gcp`, `hetzner`).
-	Provider    param.Field[string]                 `json:"provider" api:"required"`
+	Enabled     param.Field[bool]                   `json:"enabled" api:"required"`
+	Name        param.Field[string]                 `json:"name" api:"required"`
 	Schedule    param.Field[string]                 `json:"schedule" api:"required"`
 	TargetURL   param.Field[string]                 `json:"target_url" api:"required" format:"uri"`
 	Type        param.Field[string]                 `json:"type" api:"required"`
 	ArtifactURL param.Field[string]                 `json:"artifact_url"`
 	Config      param.Field[map[string]interface{}] `json:"config"`
-	TimeoutMs   param.Field[int64]                  `json:"timeout_ms"`
+	// Legacy; see `provider`.
+	Location param.Field[string] `json:"location"`
+	// Preferred: array of wire-form ids (`aws:us-east-1`). Element 0 is the
+	// deterministic primary. Each entry must be in the deployment catalog returned by
+	// `GET /v1/locations`.
+	Locations param.Field[[]string] `json:"locations"`
+	// Legacy single-location shape. Translated server-side to
+	// `locations=[<provider>:<location>]`. Kept for one release cycle.
+	Provider  param.Field[string] `json:"provider"`
+	TimeoutMs param.Field[int64]  `json:"timeout_ms"`
 }
 
 func (r CheckNewParams) MarshalJSON() (data []byte, err error) {
@@ -372,11 +385,14 @@ type CheckUpdateParams struct {
 	ArtifactURL param.Field[string]                 `json:"artifact_url"`
 	Config      param.Field[map[string]interface{}] `json:"config"`
 	Enabled     param.Field[bool]                   `json:"enabled"`
-	Name        param.Field[string]                 `json:"name"`
-	Schedule    param.Field[string]                 `json:"schedule"`
-	TargetURL   param.Field[string]                 `json:"target_url" format:"uri"`
-	TimeoutMs   param.Field[int64]                  `json:"timeout_ms"`
-	Type        param.Field[string]                 `json:"type"`
+	// Replace the location set. nil-array = leave unchanged. Each entry must be in the
+	// deployment catalog (`GET /v1/locations`).
+	Locations param.Field[[]string] `json:"locations"`
+	Name      param.Field[string]   `json:"name"`
+	Schedule  param.Field[string]   `json:"schedule"`
+	TargetURL param.Field[string]   `json:"target_url" format:"uri"`
+	TimeoutMs param.Field[int64]    `json:"timeout_ms"`
+	Type      param.Field[string]   `json:"type"`
 }
 
 func (r CheckUpdateParams) MarshalJSON() (data []byte, err error) {
