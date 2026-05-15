@@ -27,9 +27,7 @@ func TestCheckNewWithOptionalParams(t *testing.T) {
 	)
 	_, err := client.Checks.New(context.TODO(), simplechecksgo.CheckNewParams{
 		Enabled:     simplechecksgo.F(true),
-		Location:    simplechecksgo.F("location"),
 		Name:        simplechecksgo.F("name"),
-		Provider:    simplechecksgo.F("provider"),
 		Schedule:    simplechecksgo.F("*/5 * * * *"),
 		TargetURL:   simplechecksgo.F("https://example.com"),
 		Type:        simplechecksgo.F("http"),
@@ -37,6 +35,9 @@ func TestCheckNewWithOptionalParams(t *testing.T) {
 		Config: simplechecksgo.F(map[string]interface{}{
 			"foo": "bar",
 		}),
+		Location:  simplechecksgo.F("location"),
+		Locations: simplechecksgo.F([]string{"aws:us-east-1", "hetzner:fsn1"}),
+		Provider:  simplechecksgo.F("provider"),
 		TimeoutMs: simplechecksgo.F(int64(0)),
 	})
 	if err != nil {
@@ -91,6 +92,7 @@ func TestCheckUpdateWithOptionalParams(t *testing.T) {
 				"foo": "bar",
 			}),
 			Enabled:   simplechecksgo.F(true),
+			Locations: simplechecksgo.F([]string{"string"}),
 			Name:      simplechecksgo.F("name"),
 			Schedule:  simplechecksgo.F("schedule"),
 			TargetURL: simplechecksgo.F("https://example.com"),
