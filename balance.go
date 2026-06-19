@@ -12,7 +12,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-// Run-credit balance + Stripe Checkout for top-ups.
+// Run-credit balance, Stripe Checkout top-ups, and purchase history.
 //
 // BalanceService contains methods and other services that help with interacting
 // with the simple-checks API.

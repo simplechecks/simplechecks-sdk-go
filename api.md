@@ -105,6 +105,17 @@ Methods:
 
 - <code title="post /v1/checkout-session">client.CheckoutSessions.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#CheckoutSessionService.New">New</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, body <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#CheckoutSessionNewParams">CheckoutSessionNewParams</a>) (\*<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#CheckoutSession">CheckoutSession</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
+# Purchases
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#Purchase">Purchase</a>
+- <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#PurchaseListResponse">PurchaseListResponse</a>
+
+Methods:
+
+- <code title="get /v1/purchases">client.Purchases.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#PurchaseService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#PurchaseListParams">PurchaseListParams</a>) (\*<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#PurchaseListResponse">PurchaseListResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
 # Members
 
 Response Types:
@@ -141,3 +152,13 @@ Response Types:
 Methods:
 
 - <code title="get /v1/locations">client.Locations.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#LocationService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) (\*<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#LocationListResponse">LocationListResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+
+# Pricing
+
+Response Types:
+
+- <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#Pricing">Pricing</a>
+
+Methods:
+
+- <code title="get /v1/pricing">client.Pricing.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#PricingService.Get">Get</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>) (\*<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#Pricing">Pricing</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
