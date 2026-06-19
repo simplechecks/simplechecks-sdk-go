@@ -28,10 +28,12 @@ type Client struct {
 	Incidents *IncidentService
 	// Manage personal access tokens (PATs).
 	Keys *KeyService
-	// Run-credit balance + Stripe Checkout for top-ups.
+	// Run-credit balance, Stripe Checkout top-ups, and purchase history.
 	Balance *BalanceService
-	// Run-credit balance + Stripe Checkout for top-ups.
+	// Run-credit balance, Stripe Checkout top-ups, and purchase history.
 	CheckoutSessions *CheckoutSessionService
+	// Run-credit balance, Stripe Checkout top-ups, and purchase history.
+	Purchases *PurchaseService
 	// Manage who has access to an account and at what role (PR-Members/2). Five roles:
 	// owner / admin / member / billing / viewer. Owner is the strict superset of all
 	// other roles' scopes; every account always has at least one owner.
@@ -40,6 +42,7 @@ type Client struct {
 	// geographic metadata + live status. Used to drive the region picker and the
 	// dashboard's locations map.
 	Locations *LocationService
+	Pricing   *PricingService
 }
 
 // DefaultClientOptions read from the environment (SIMPLECHECKS_API_KEY,
@@ -79,8 +82,10 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.Keys = NewKeyService(opts...)
 	r.Balance = NewBalanceService(opts...)
 	r.CheckoutSessions = NewCheckoutSessionService(opts...)
+	r.Purchases = NewPurchaseService(opts...)
 	r.Members = NewMemberService(opts...)
 	r.Locations = NewLocationService(opts...)
+	r.Pricing = NewPricingService(opts...)
 
 	return
 }
