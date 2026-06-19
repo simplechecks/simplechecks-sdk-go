@@ -12,6 +12,9 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
+// Active token-pricing table: per-check-type weights and the customer-facing
+// provider cost multipliers. Reads are free.
+//
 // PricingService contains methods and other services that help with interacting
 // with the simple-checks API.
 //

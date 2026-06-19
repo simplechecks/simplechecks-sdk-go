@@ -42,7 +42,9 @@ type Client struct {
 	// geographic metadata + live status. Used to drive the region picker and the
 	// dashboard's locations map.
 	Locations *LocationService
-	Pricing   *PricingService
+	// Active token-pricing table: per-check-type weights and the customer-facing
+	// provider cost multipliers. Reads are free.
+	Pricing *PricingService
 }
 
 // DefaultClientOptions read from the environment (SIMPLECHECKS_API_KEY,
