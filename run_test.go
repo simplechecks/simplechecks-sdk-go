@@ -48,11 +48,13 @@ func TestRunListWithOptionalParams(t *testing.T) {
 		option.WithAPIKey("My API Key"),
 	)
 	_, err := client.Runs.List(context.TODO(), simplechecksgo.RunListParams{
-		CheckID: simplechecksgo.F("check_id"),
-		Limit:   simplechecksgo.F(int64(0)),
-		Offset:  simplechecksgo.F(int64(0)),
-		Since:   simplechecksgo.F(int64(0)),
-		Status:  simplechecksgo.F(simplechecksgo.RunListParamsStatusPass),
+		CheckID:  simplechecksgo.F("check_id"),
+		Cursor:   simplechecksgo.F("cursor"),
+		Limit:    simplechecksgo.F(int64(0)),
+		Location: simplechecksgo.F("location"),
+		Since:    simplechecksgo.F(int64(0)),
+		Status:   simplechecksgo.F(simplechecksgo.RunListParamsStatusPass),
+		Until:    simplechecksgo.F(int64(0)),
 	})
 	if err != nil {
 		var apierr *simplechecksgo.Error
