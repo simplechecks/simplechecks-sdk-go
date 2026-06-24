@@ -14,7 +14,9 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-// Per-check alert configuration + test-fire endpoint (PR-Alerts/1).
+// Per-check alert settings: consecutive-failure threshold and the M-of-N consensus
+// parameters. Notification destinations are reusable account-scoped resources
+// under `alert-channels`, bound to checks via `alert-subscriptions`.
 //
 // CheckAlertService contains methods and other services that help with interacting
 // with the simple-checks API.
@@ -63,11 +65,12 @@ func (r *CheckAlertService) Delete(ctx context.Context, id string, opts ...optio
 	return err
 }
 
-// Idempotent upsert. The same body shape is returned by GET. Channels supported:
-// email, slack, discord, teams, webhook, pagerduty, opsgenie. The PR-Alerts/1
-// evaluator runs M-of-N consensus before incident-firing; if fewer than
-// `consensus_m` locations have observations, the rule falls back to "any failing =
-// failing" so brand-new checks don't miss outages.
+// Idempotent upsert. The same body shape is returned by GET. This configures alert
+// _settings_ only (failure threshold + consensus); notification destinations live
+// in `alert-channels`, bound via `alert-subscriptions`. The evaluator runs M-of-N
+// consensus before incident-firing; if fewer than `consensus_m` locations have
+// observations, the rule falls back to "any failing = failing" so brand-new checks
+// don't miss outages.
 //
 // Eventual-consistency contract: after a config write, the evaluator picks up the
 // new thresholds on the next ingest cycle (15s push cadence).
@@ -84,52 +87,11 @@ func (r *CheckAlertService) Replace(ctx context.Context, id string, body CheckAl
 	return res, err
 }
 
-// Synthesizes a `test_fire` dispatch per channel and enqueues them for the async
-// dispatcher. Useful for verifying that a Slack webhook URL or PagerDuty
-// integration key actually works without waiting for a real failure. The test
-// dispatches do not affect alert state or incident lifecycle. Requires the
-// `checks:write` scope.
-func (r *CheckAlertService) TestFire(ctx context.Context, id string, opts ...option.RequestOption) (res *CheckAlertTestFireResponse, err error) {
-	opts = slices.Concat(r.Options, opts)
-	if id == "" {
-		err = errors.New("missing required id parameter")
-		return nil, err
-	}
-	path := fmt.Sprintf("v1/checks/%s/alerts:test", id)
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodPost, path, nil, &res, opts...)
-	return res, err
-}
-
-type CheckAlertTestFireResponse struct {
-	// Total channels configured on the check.
-	ChannelCount int64 `json:"channel_count" api:"required"`
-	// Number of dispatches accepted (un-deduped).
-	Enqueued int64 `json:"enqueued" api:"required"`
-	// Synthetic incident id used to dedupe the test dispatches against accidental
-	// double-clicks.
-	IncidentID string                         `json:"incident_id" api:"required" format:"uuid"`
-	JSON       checkAlertTestFireResponseJSON `json:"-"`
-}
-
-// checkAlertTestFireResponseJSON contains the JSON metadata for the struct
-// [CheckAlertTestFireResponse]
-type checkAlertTestFireResponseJSON struct {
-	ChannelCount apijson.Field
-	Enqueued     apijson.Field
-	IncidentID   apijson.Field
-	raw          string
-	ExtraFields  map[string]apijson.Field
-}
-
-func (r *CheckAlertTestFireResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r checkAlertTestFireResponseJSON) RawJSON() string {
-	return r.raw
-}
-
 type CheckAlertReplaceParams struct {
+	// Per-check alert _settings_ (settings-only as of the alerting entity model).
+	// Notification destinations live in first-class `/v1/alert-channels` bound to
+	// checks via `/v1/alert-subscriptions`; pause-execution windows live in
+	// `/v1/maintenance-windows`.
 	AlertConfig AlertConfigParam `json:"alert_config" api:"required"`
 }
 
