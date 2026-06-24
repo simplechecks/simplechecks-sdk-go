@@ -28,6 +28,17 @@ type Client struct {
 	Incidents *IncidentService
 	// Manage personal access tokens (PATs).
 	Keys *KeyService
+	// Reusable, account-scoped notification destinations (webhook, Slack, Discord,
+	// Teams, PagerDuty, Opsgenie, email). One channel can serve many checks. Includes
+	// a test-fire endpoint.
+	AlertChannels *AlertChannelService
+	// Bindings of a check to an alert channel, each carrying its own notify-on-failure
+	// / notify-on-recovery flags.
+	AlertSubscriptions *AlertSubscriptionService
+	// Account-scoped windows that pause execution of their targeted checks for the
+	// scheduled interval(s); paused runs are not recorded and never count against
+	// uptime.
+	MaintenanceWindows *MaintenanceWindowService
 	// Run-credit balance, Stripe Checkout top-ups, and purchase history.
 	Balance *BalanceService
 	// Run-credit balance, Stripe Checkout top-ups, and purchase history.
@@ -82,6 +93,9 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.Runs = NewRunService(opts...)
 	r.Incidents = NewIncidentService(opts...)
 	r.Keys = NewKeyService(opts...)
+	r.AlertChannels = NewAlertChannelService(opts...)
+	r.AlertSubscriptions = NewAlertSubscriptionService(opts...)
+	r.MaintenanceWindows = NewMaintenanceWindowService(opts...)
 	r.Balance = NewBalanceService(opts...)
 	r.CheckoutSessions = NewCheckoutSessionService(opts...)
 	r.Purchases = NewPurchaseService(opts...)

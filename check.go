@@ -29,7 +29,9 @@ import (
 // the [NewCheckService] method instead.
 type CheckService struct {
 	Options []option.RequestOption
-	// Per-check alert configuration + test-fire endpoint (PR-Alerts/1).
+	// Per-check alert settings: consecutive-failure threshold and the M-of-N consensus
+	// parameters. Notification destinations are reusable account-scoped resources
+	// under `alert-channels`, bound to checks via `alert-subscriptions`.
 	Alerts *CheckAlertService
 }
 
@@ -118,70 +120,11 @@ func (r *CheckService) Delete(ctx context.Context, id string, opts ...option.Req
 	return err
 }
 
-type AlertChannel struct {
-	// Channel-specific destination. URL for the webhook flavors
-	// (slack/discord/teams/webhook), email address for `email`, integration key for
-	// `pagerduty`, API key for `opsgenie`.
-	Target string           `json:"target" api:"required"`
-	Type   AlertChannelType `json:"type" api:"required"`
-	// Type-specific options. Optional.
-	Config map[string]interface{} `json:"config"`
-	JSON   alertChannelJSON       `json:"-"`
-}
-
-// alertChannelJSON contains the JSON metadata for the struct [AlertChannel]
-type alertChannelJSON struct {
-	Target      apijson.Field
-	Type        apijson.Field
-	Config      apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *AlertChannel) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r alertChannelJSON) RawJSON() string {
-	return r.raw
-}
-
-type AlertChannelType string
-
-const (
-	AlertChannelTypeEmail     AlertChannelType = "email"
-	AlertChannelTypeSlack     AlertChannelType = "slack"
-	AlertChannelTypeDiscord   AlertChannelType = "discord"
-	AlertChannelTypeTeams     AlertChannelType = "teams"
-	AlertChannelTypeWebhook   AlertChannelType = "webhook"
-	AlertChannelTypePagerduty AlertChannelType = "pagerduty"
-	AlertChannelTypeOpsgenie  AlertChannelType = "opsgenie"
-)
-
-func (r AlertChannelType) IsKnown() bool {
-	switch r {
-	case AlertChannelTypeEmail, AlertChannelTypeSlack, AlertChannelTypeDiscord, AlertChannelTypeTeams, AlertChannelTypeWebhook, AlertChannelTypePagerduty, AlertChannelTypeOpsgenie:
-		return true
-	}
-	return false
-}
-
-type AlertChannelParam struct {
-	// Channel-specific destination. URL for the webhook flavors
-	// (slack/discord/teams/webhook), email address for `email`, integration key for
-	// `pagerduty`, API key for `opsgenie`.
-	Target param.Field[string]           `json:"target" api:"required"`
-	Type   param.Field[AlertChannelType] `json:"type" api:"required"`
-	// Type-specific options. Optional.
-	Config param.Field[map[string]interface{}] `json:"config"`
-}
-
-func (r AlertChannelParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
-}
-
+// Per-check alert _settings_ (settings-only as of the alerting entity model).
+// Notification destinations live in first-class `/v1/alert-channels` bound to
+// checks via `/v1/alert-subscriptions`; pause-execution windows live in
+// `/v1/maintenance-windows`.
 type AlertConfig struct {
-	Channels []AlertChannel `json:"channels" api:"required"`
 	// Number of consecutive globally-failing observations (after M-of-N consensus
 	// collapses per-location status) required before an incident fires. Default = 1 =
 	// "alert on first globally-failing observation."
@@ -199,18 +142,14 @@ type AlertConfig struct {
 	// Server-set; ignored on write.
 	AccountID string `json:"account_id" format:"uuid"`
 	// Server-set; ignored on write.
-	CheckID   string    `json:"check_id" format:"uuid"`
-	CreatedAt time.Time `json:"created_at" format:"date-time"`
-	// Absolute-time windows during which the evaluator suppresses dispatch but still
-	// updates state. Cron-style recurring windows are a future enhancement.
-	MaintenanceWindows []MaintenanceWindow `json:"maintenance_windows"`
-	UpdatedAt          time.Time           `json:"updated_at" format:"date-time"`
-	JSON               alertConfigJSON     `json:"-"`
+	CheckID   string          `json:"check_id" format:"uuid"`
+	CreatedAt time.Time       `json:"created_at" format:"date-time"`
+	UpdatedAt time.Time       `json:"updated_at" format:"date-time"`
+	JSON      alertConfigJSON `json:"-"`
 }
 
 // alertConfigJSON contains the JSON metadata for the struct [AlertConfig]
 type alertConfigJSON struct {
-	Channels                     apijson.Field
 	ConsecutiveFailuresThreshold apijson.Field
 	ConsensusM                   apijson.Field
 	ConsensusN                   apijson.Field
@@ -218,7 +157,6 @@ type alertConfigJSON struct {
 	AccountID                    apijson.Field
 	CheckID                      apijson.Field
 	CreatedAt                    apijson.Field
-	MaintenanceWindows           apijson.Field
 	UpdatedAt                    apijson.Field
 	raw                          string
 	ExtraFields                  map[string]apijson.Field
@@ -232,8 +170,11 @@ func (r alertConfigJSON) RawJSON() string {
 	return r.raw
 }
 
+// Per-check alert _settings_ (settings-only as of the alerting entity model).
+// Notification destinations live in first-class `/v1/alert-channels` bound to
+// checks via `/v1/alert-subscriptions`; pause-execution windows live in
+// `/v1/maintenance-windows`.
 type AlertConfigParam struct {
-	Channels param.Field[[]AlertChannelParam] `json:"channels" api:"required"`
 	// Number of consecutive globally-failing observations (after M-of-N consensus
 	// collapses per-location status) required before an incident fires. Default = 1 =
 	// "alert on first globally-failing observation."
@@ -252,9 +193,6 @@ type AlertConfigParam struct {
 	AccountID param.Field[string] `json:"account_id" format:"uuid"`
 	// Server-set; ignored on write.
 	CheckID param.Field[string] `json:"check_id" format:"uuid"`
-	// Absolute-time windows during which the evaluator suppresses dispatch but still
-	// updates state. Cron-style recurring windows are a future enhancement.
-	MaintenanceWindows param.Field[[]MaintenanceWindowParam] `json:"maintenance_windows"`
 }
 
 func (r AlertConfigParam) MarshalJSON() (data []byte, err error) {
@@ -323,38 +261,6 @@ func (r *Check) UnmarshalJSON(data []byte) (err error) {
 
 func (r checkJSON) RawJSON() string {
 	return r.raw
-}
-
-type MaintenanceWindow struct {
-	EndUnixMs   int64                 `json:"end_unix_ms" api:"required"`
-	StartUnixMs int64                 `json:"start_unix_ms" api:"required"`
-	JSON        maintenanceWindowJSON `json:"-"`
-}
-
-// maintenanceWindowJSON contains the JSON metadata for the struct
-// [MaintenanceWindow]
-type maintenanceWindowJSON struct {
-	EndUnixMs   apijson.Field
-	StartUnixMs apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *MaintenanceWindow) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r maintenanceWindowJSON) RawJSON() string {
-	return r.raw
-}
-
-type MaintenanceWindowParam struct {
-	EndUnixMs   param.Field[int64] `json:"end_unix_ms" api:"required"`
-	StartUnixMs param.Field[int64] `json:"start_unix_ms" api:"required"`
-}
-
-func (r MaintenanceWindowParam) MarshalJSON() (data []byte, err error) {
-	return apijson.MarshalRoot(r)
 }
 
 type CheckNewParams struct {
