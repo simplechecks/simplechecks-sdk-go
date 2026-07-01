@@ -56,11 +56,10 @@ Methods:
 Response Types:
 
 - <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#Incident">Incident</a>
-- <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentListResponse">IncidentListResponse</a>
 
 Methods:
 
-- <code title="get /v1/incidents">client.Incidents.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentListParams">IncidentListParams</a>) (\*<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentListResponse">IncidentListResponse</a>, <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
+- <code title="get /v1/incidents">client.Incidents.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentService.List">List</a>(ctx <a href="https://pkg.go.dev/context">context</a>.<a href="https://pkg.go.dev/context#Context">Context</a>, query <a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#IncidentListParams">IncidentListParams</a>) (\*<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go/packages/pagination">pagination</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go/packages/pagination#IncidentsOffset">IncidentsOffset</a>[<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go">simplechecksgo</a>.<a href="https://pkg.go.dev/github.com/simplechecks/simplechecks-sdk-go#Incident">Incident</a>], <a href="https://pkg.go.dev/builtin#error">error</a>)</code>
 
 # Keys
 

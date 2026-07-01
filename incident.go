@@ -13,6 +13,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/internal/param"
 	"github.com/simplechecks/simplechecks-sdk-go/internal/requestconfig"
 	"github.com/simplechecks/simplechecks-sdk-go/option"
+	"github.com/simplechecks/simplechecks-sdk-go/packages/pagination"
 )
 
 // Read-only incident timeline derived from alert state.
@@ -54,11 +55,43 @@ func NewIncidentService(opts ...option.RequestOption) (r *IncidentService) {
 //
 // Requires the `checks:read` scope (incidents are per-check; we reuse the existing
 // scope rather than minting a new one).
-func (r *IncidentService) List(ctx context.Context, query IncidentListParams, opts ...option.RequestOption) (res *IncidentListResponse, err error) {
+func (r *IncidentService) List(ctx context.Context, query IncidentListParams, opts ...option.RequestOption) (res *pagination.IncidentsOffset[Incident], err error) {
+	var raw *http.Response
 	opts = slices.Concat(r.Options, opts)
+	opts = append([]option.RequestOption{option.WithResponseInto(&raw)}, opts...)
 	path := "v1/incidents"
-	err = requestconfig.ExecuteNewRequest(ctx, http.MethodGet, path, query, &res, opts...)
-	return res, err
+	cfg, err := requestconfig.NewRequestConfig(ctx, http.MethodGet, path, query, &res, opts...)
+	if err != nil {
+		return nil, err
+	}
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+// Returns incidents derived on read from `alert_state` (ongoing) and
+// `alert_dispatches` (resolved). Ordered ongoing-first, then most-recent-resolved
+// first. Pagination is offset-based; pass `next_offset` back to continue.
+//
+// Status semantics:
+//
+//   - `ongoing` — `alert_state.current_incident_id` is set; `resolved_at_unix_ms` is
+//     omitted.
+//   - `resolved` — a recovery dispatch has been enqueued; both timestamps are
+//     populated.
+//
+// Incidents that fired entirely inside a maintenance window won't appear here —
+// the dispatcher doesn't ledger suppressed dispatches. That matches the customer
+// expectation that maintenance windows mean "don't notify, don't surface as
+// urgent."
+//
+// Requires the `checks:read` scope (incidents are per-check; we reuse the existing
+// scope rather than minting a new one).
+func (r *IncidentService) ListAutoPaging(ctx context.Context, query IncidentListParams, opts ...option.RequestOption) *pagination.IncidentsOffsetAutoPager[Incident] {
+	return pagination.NewIncidentsOffsetAutoPager(r.List(ctx, query, opts...))
 }
 
 // One alert-state lifecycle entry. Derived on read from `alert_state` +
@@ -110,30 +143,6 @@ func (r IncidentStatus) IsKnown() bool {
 		return true
 	}
 	return false
-}
-
-type IncidentListResponse struct {
-	Incidents []Incident `json:"incidents" api:"required"`
-	// Offset to pass on the next request. Zero (or absent) when there's no more data.
-	NextOffset int64                    `json:"next_offset"`
-	JSON       incidentListResponseJSON `json:"-"`
-}
-
-// incidentListResponseJSON contains the JSON metadata for the struct
-// [IncidentListResponse]
-type incidentListResponseJSON struct {
-	Incidents   apijson.Field
-	NextOffset  apijson.Field
-	raw         string
-	ExtraFields map[string]apijson.Field
-}
-
-func (r *IncidentListResponse) UnmarshalJSON(data []byte) (err error) {
-	return apijson.UnmarshalRoot(data, r)
-}
-
-func (r incidentListResponseJSON) RawJSON() string {
-	return r.raw
 }
 
 type IncidentListParams struct {
