@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.3.0 (2026-07-01)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* **api:** api update ([9a030f3](https://github.com/simplechecks/simplechecks-sdk-go/commit/9a030f39eeaf8796fffbb7e856aa9bdd2da8308f))
+* **api:** api update ([5290222](https://github.com/simplechecks/simplechecks-sdk-go/commit/529022238ffacf5a00e3b96ffad411a28c8033cc))
+* **api:** api update ([231f15f](https://github.com/simplechecks/simplechecks-sdk-go/commit/231f15fdf21a8034b40753e7dafdf32edc462b9b))
+* **api:** api update ([1444067](https://github.com/simplechecks/simplechecks-sdk-go/commit/1444067cab6ff4fd9978a367744a7227b3779db5))
+* **api:** api update ([3b579a0](https://github.com/simplechecks/simplechecks-sdk-go/commit/3b579a0aacbd658902fe9bdff0e01fbdd86038b7))
+* **api:** api update ([c2463b5](https://github.com/simplechecks/simplechecks-sdk-go/commit/c2463b5c3f107be13b25e060b3a0c1f79151f645))
+* **api:** api update ([42bd983](https://github.com/simplechecks/simplechecks-sdk-go/commit/42bd983fcf40789699e82e584de51a616c92741d))
+* **api:** api update ([b6b0487](https://github.com/simplechecks/simplechecks-sdk-go/commit/b6b048752fd6d440c9e858f23cefd743e831be89))
+* **api:** api update ([ad3d1be](https://github.com/simplechecks/simplechecks-sdk-go/commit/ad3d1be02f45109bc5933bdfb6abbdbdeec4abb9))
+
 ## 0.2.0 (2026-05-10)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.1.0...v0.2.0)
