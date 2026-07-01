@@ -28,10 +28,34 @@ type Client struct {
 	Incidents *IncidentService
 	// Manage personal access tokens (PATs).
 	Keys *KeyService
-	// Run-credit balance + Stripe Checkout for top-ups.
+	// Reusable, account-scoped notification destinations (webhook, Slack, Discord,
+	// Teams, PagerDuty, Opsgenie, email). One channel can serve many checks. Includes
+	// a test-fire endpoint.
+	AlertChannels *AlertChannelService
+	// Bindings of a check to an alert channel, each carrying its own notify-on-failure
+	// / notify-on-recovery flags.
+	AlertSubscriptions *AlertSubscriptionService
+	// Account-scoped windows that pause execution of their targeted checks for the
+	// scheduled interval(s); paused runs are not recorded and never count against
+	// uptime.
+	MaintenanceWindows *MaintenanceWindowService
+	// Run-credit balance, Stripe Checkout top-ups, and purchase history.
 	Balance *BalanceService
-	// Run-credit balance + Stripe Checkout for top-ups.
+	// Run-credit balance, Stripe Checkout top-ups, and purchase history.
 	CheckoutSessions *CheckoutSessionService
+	// Run-credit balance, Stripe Checkout top-ups, and purchase history.
+	Purchases *PurchaseService
+	// Manage who has access to an account and at what role (PR-Members/2). Five roles:
+	// owner / admin / member / billing / viewer. Owner is the strict superset of all
+	// other roles' scopes; every account always has at least one owner.
+	Members *MemberService
+	// Catalog of (provider, location) deployments Simple Checks runs checks from, with
+	// geographic metadata + live status. Used to drive the region picker and the
+	// dashboard's locations map.
+	Locations *LocationService
+	// Active token-pricing table: per-check-type weights and the customer-facing
+	// provider cost multipliers. Reads are free.
+	Pricing *PricingService
 }
 
 // DefaultClientOptions read from the environment (SIMPLECHECKS_API_KEY,
@@ -69,8 +93,15 @@ func NewClient(opts ...option.RequestOption) (r *Client) {
 	r.Runs = NewRunService(opts...)
 	r.Incidents = NewIncidentService(opts...)
 	r.Keys = NewKeyService(opts...)
+	r.AlertChannels = NewAlertChannelService(opts...)
+	r.AlertSubscriptions = NewAlertSubscriptionService(opts...)
+	r.MaintenanceWindows = NewMaintenanceWindowService(opts...)
 	r.Balance = NewBalanceService(opts...)
 	r.CheckoutSessions = NewCheckoutSessionService(opts...)
+	r.Purchases = NewPurchaseService(opts...)
+	r.Members = NewMemberService(opts...)
+	r.Locations = NewLocationService(opts...)
+	r.Pricing = NewPricingService(opts...)
 
 	return
 }

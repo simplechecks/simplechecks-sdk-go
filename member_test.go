@@ -13,7 +13,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-func TestRunGet(t *testing.T) {
+func TestMemberUpdate(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,7 +25,13 @@ func TestRunGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Runs.Get(context.TODO(), "run_sew2vlfw09vz231q9mz9al2ecd")
+	_, err := client.Members.Update(
+		context.TODO(),
+		"user_id",
+		simplechecksgo.MemberUpdateParams{
+			Role: simplechecksgo.F(simplechecksgo.MemberUpdateParamsRoleOwner),
+		},
+	)
 	if err != nil {
 		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {
@@ -35,7 +41,7 @@ func TestRunGet(t *testing.T) {
 	}
 }
 
-func TestRunListWithOptionalParams(t *testing.T) {
+func TestMemberList(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -47,15 +53,7 @@ func TestRunListWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Runs.List(context.TODO(), simplechecksgo.RunListParams{
-		CheckID:  simplechecksgo.F("check_id"),
-		Cursor:   simplechecksgo.F("cursor"),
-		Limit:    simplechecksgo.F(int64(0)),
-		Location: simplechecksgo.F("location"),
-		Since:    simplechecksgo.F(int64(0)),
-		Status:   simplechecksgo.F(simplechecksgo.RunListParamsStatusPass),
-		Until:    simplechecksgo.F(int64(0)),
-	})
+	_, err := client.Members.List(context.TODO())
 	if err != nil {
 		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {
@@ -65,7 +63,7 @@ func TestRunListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestRunAggregatesWithOptionalParams(t *testing.T) {
+func TestMemberRemove(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -77,14 +75,7 @@ func TestRunAggregatesWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Runs.Aggregates(context.TODO(), simplechecksgo.RunAggregatesParams{
-		Bucket:   simplechecksgo.F(simplechecksgo.RunAggregatesParamsBucketMinute),
-		CheckID:  simplechecksgo.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		From:     simplechecksgo.F(int64(0)),
-		Limit:    simplechecksgo.F(int64(0)),
-		Location: simplechecksgo.F("location"),
-		To:       simplechecksgo.F(int64(0)),
-	})
+	err := client.Members.Remove(context.TODO(), "user_id")
 	if err != nil {
 		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {

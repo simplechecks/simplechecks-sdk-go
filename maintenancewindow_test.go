@@ -13,7 +13,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-func TestCheckNewWithOptionalParams(t *testing.T) {
+func TestMaintenanceWindowNewWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,20 +25,17 @@ func TestCheckNewWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Checks.New(context.TODO(), simplechecksgo.CheckNewParams{
-		Enabled:     simplechecksgo.F(true),
-		Name:        simplechecksgo.F("name"),
-		Schedule:    simplechecksgo.F("*/5 * * * *"),
-		TargetURL:   simplechecksgo.F("https://example.com"),
-		Type:        simplechecksgo.F("http"),
-		ArtifactURL: simplechecksgo.F("artifact_url"),
-		Config: simplechecksgo.F(map[string]interface{}{
-			"foo": "bar",
-		}),
-		Location:  simplechecksgo.F("location"),
-		Locations: simplechecksgo.F([]string{"aws:us-east-1", "hetzner:fsn1"}),
-		Provider:  simplechecksgo.F("provider"),
-		TimeoutMs: simplechecksgo.F(int64(0)),
+	_, err := client.MaintenanceWindows.New(context.TODO(), simplechecksgo.MaintenanceWindowNewParams{
+		DurationMs:       simplechecksgo.F(int64(0)),
+		Name:             simplechecksgo.F("name"),
+		ScheduleKind:     simplechecksgo.F(simplechecksgo.MaintenanceWindowNewParamsScheduleKindOneTime),
+		StartUnixMs:      simplechecksgo.F(int64(0)),
+		CheckIDs:         simplechecksgo.F([]string{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"}),
+		CheckTags:        simplechecksgo.F([]string{"string"}),
+		RepeatEndsUnixMs: simplechecksgo.F(int64(0)),
+		RepeatInterval:   simplechecksgo.F(int64(0)),
+		RepeatUnit:       simplechecksgo.F(simplechecksgo.MaintenanceWindowNewParamsRepeatUnitDay),
+		Timezone:         simplechecksgo.F("timezone"),
 	})
 	if err != nil {
 		var apierr *simplechecksgo.Error
@@ -49,7 +46,7 @@ func TestCheckNewWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestCheckGet(t *testing.T) {
+func TestMaintenanceWindowGet(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -61,7 +58,7 @@ func TestCheckGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Checks.Get(context.TODO(), "id")
+	_, err := client.MaintenanceWindows.Get(context.TODO(), "id")
 	if err != nil {
 		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {
@@ -71,7 +68,7 @@ func TestCheckGet(t *testing.T) {
 	}
 }
 
-func TestCheckUpdateWithOptionalParams(t *testing.T) {
+func TestMaintenanceWindowUpdateWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -83,21 +80,20 @@ func TestCheckUpdateWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Checks.Update(
+	_, err := client.MaintenanceWindows.Update(
 		context.TODO(),
 		"id",
-		simplechecksgo.CheckUpdateParams{
-			ArtifactURL: simplechecksgo.F("artifact_url"),
-			Config: simplechecksgo.F(map[string]interface{}{
-				"foo": "bar",
-			}),
-			Enabled:   simplechecksgo.F(true),
-			Locations: simplechecksgo.F([]string{"string"}),
-			Name:      simplechecksgo.F("name"),
-			Schedule:  simplechecksgo.F("schedule"),
-			TargetURL: simplechecksgo.F("https://example.com"),
-			TimeoutMs: simplechecksgo.F(int64(0)),
-			Type:      simplechecksgo.F("type"),
+		simplechecksgo.MaintenanceWindowUpdateParams{
+			CheckIDs:         simplechecksgo.F([]string{"182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"}),
+			CheckTags:        simplechecksgo.F([]string{"string"}),
+			DurationMs:       simplechecksgo.F(int64(0)),
+			Name:             simplechecksgo.F("name"),
+			RepeatEndsUnixMs: simplechecksgo.F(int64(0)),
+			RepeatInterval:   simplechecksgo.F(int64(0)),
+			RepeatUnit:       simplechecksgo.F(simplechecksgo.MaintenanceWindowUpdateParamsRepeatUnitDay),
+			ScheduleKind:     simplechecksgo.F(simplechecksgo.MaintenanceWindowUpdateParamsScheduleKindOneTime),
+			StartUnixMs:      simplechecksgo.F(int64(0)),
+			Timezone:         simplechecksgo.F("timezone"),
 		},
 	)
 	if err != nil {
@@ -109,7 +105,7 @@ func TestCheckUpdateWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestCheckListWithOptionalParams(t *testing.T) {
+func TestMaintenanceWindowListWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -121,9 +117,9 @@ func TestCheckListWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{
+	_, err := client.MaintenanceWindows.List(context.TODO(), simplechecksgo.MaintenanceWindowListParams{
+		Cursor: simplechecksgo.F("cursor"),
 		Limit:  simplechecksgo.F(int64(1)),
-		Offset: simplechecksgo.F(int64(0)),
 	})
 	if err != nil {
 		var apierr *simplechecksgo.Error
@@ -134,7 +130,7 @@ func TestCheckListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestCheckDelete(t *testing.T) {
+func TestMaintenanceWindowDelete(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -146,7 +142,7 @@ func TestCheckDelete(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Checks.Delete(context.TODO(), "id")
+	err := client.MaintenanceWindows.Delete(context.TODO(), "id")
 	if err != nil {
 		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {

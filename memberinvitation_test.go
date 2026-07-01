@@ -13,7 +13,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-func TestRunGet(t *testing.T) {
+func TestMemberInvitationNew(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,36 +25,9 @@ func TestRunGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Runs.Get(context.TODO(), "run_sew2vlfw09vz231q9mz9al2ecd")
-	if err != nil {
-		var apierr *simplechecksgo.Error
-		if errors.As(err, &apierr) {
-			t.Log(string(apierr.DumpRequest(true)))
-		}
-		t.Fatalf("err should be nil: %s", err.Error())
-	}
-}
-
-func TestRunListWithOptionalParams(t *testing.T) {
-	baseURL := "http://localhost:4010"
-	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
-		baseURL = envURL
-	}
-	if !testutil.CheckTestServer(t, baseURL) {
-		return
-	}
-	client := simplechecksgo.NewClient(
-		option.WithBaseURL(baseURL),
-		option.WithAPIKey("My API Key"),
-	)
-	_, err := client.Runs.List(context.TODO(), simplechecksgo.RunListParams{
-		CheckID:  simplechecksgo.F("check_id"),
-		Cursor:   simplechecksgo.F("cursor"),
-		Limit:    simplechecksgo.F(int64(0)),
-		Location: simplechecksgo.F("location"),
-		Since:    simplechecksgo.F(int64(0)),
-		Status:   simplechecksgo.F(simplechecksgo.RunListParamsStatusPass),
-		Until:    simplechecksgo.F(int64(0)),
+	_, err := client.Members.Invitations.New(context.TODO(), simplechecksgo.MemberInvitationNewParams{
+		Email: simplechecksgo.F("dev@stainless.com"),
+		Role:  simplechecksgo.F(simplechecksgo.MemberInvitationNewParamsRoleOwner),
 	})
 	if err != nil {
 		var apierr *simplechecksgo.Error
@@ -65,7 +38,7 @@ func TestRunListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestRunAggregatesWithOptionalParams(t *testing.T) {
+func TestMemberInvitationList(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -77,14 +50,29 @@ func TestRunAggregatesWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Runs.Aggregates(context.TODO(), simplechecksgo.RunAggregatesParams{
-		Bucket:   simplechecksgo.F(simplechecksgo.RunAggregatesParamsBucketMinute),
-		CheckID:  simplechecksgo.F("182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e"),
-		From:     simplechecksgo.F(int64(0)),
-		Limit:    simplechecksgo.F(int64(0)),
-		Location: simplechecksgo.F("location"),
-		To:       simplechecksgo.F(int64(0)),
-	})
+	_, err := client.Members.Invitations.List(context.TODO())
+	if err != nil {
+		var apierr *simplechecksgo.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestMemberInvitationRevoke(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := simplechecksgo.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	err := client.Members.Invitations.Revoke(context.TODO(), "id")
 	if err != nil {
 		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {

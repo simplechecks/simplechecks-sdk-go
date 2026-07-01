@@ -13,7 +13,7 @@ import (
 	"github.com/simplechecks/simplechecks-sdk-go/option"
 )
 
-func TestCheckNewWithOptionalParams(t *testing.T) {
+func TestAlertChannelNewWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -25,20 +25,13 @@ func TestCheckNewWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Checks.New(context.TODO(), simplechecksgo.CheckNewParams{
-		Enabled:     simplechecksgo.F(true),
-		Name:        simplechecksgo.F("name"),
-		Schedule:    simplechecksgo.F("*/5 * * * *"),
-		TargetURL:   simplechecksgo.F("https://example.com"),
-		Type:        simplechecksgo.F("http"),
-		ArtifactURL: simplechecksgo.F("artifact_url"),
+	_, err := client.AlertChannels.New(context.TODO(), simplechecksgo.AlertChannelNewParams{
+		Name:   simplechecksgo.F("name"),
+		Target: simplechecksgo.F("target"),
+		Type:   simplechecksgo.F(simplechecksgo.AlertChannelNewParamsTypeSlack),
 		Config: simplechecksgo.F(map[string]interface{}{
 			"foo": "bar",
 		}),
-		Location:  simplechecksgo.F("location"),
-		Locations: simplechecksgo.F([]string{"aws:us-east-1", "hetzner:fsn1"}),
-		Provider:  simplechecksgo.F("provider"),
-		TimeoutMs: simplechecksgo.F(int64(0)),
 	})
 	if err != nil {
 		var apierr *simplechecksgo.Error
@@ -49,7 +42,7 @@ func TestCheckNewWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestCheckGet(t *testing.T) {
+func TestAlertChannelGet(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -61,7 +54,7 @@ func TestCheckGet(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Checks.Get(context.TODO(), "id")
+	_, err := client.AlertChannels.Get(context.TODO(), "id")
 	if err != nil {
 		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {
@@ -71,7 +64,7 @@ func TestCheckGet(t *testing.T) {
 	}
 }
 
-func TestCheckUpdateWithOptionalParams(t *testing.T) {
+func TestAlertChannelUpdateWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -83,21 +76,16 @@ func TestCheckUpdateWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Checks.Update(
+	_, err := client.AlertChannels.Update(
 		context.TODO(),
 		"id",
-		simplechecksgo.CheckUpdateParams{
-			ArtifactURL: simplechecksgo.F("artifact_url"),
+		simplechecksgo.AlertChannelUpdateParams{
 			Config: simplechecksgo.F(map[string]interface{}{
 				"foo": "bar",
 			}),
-			Enabled:   simplechecksgo.F(true),
-			Locations: simplechecksgo.F([]string{"string"}),
-			Name:      simplechecksgo.F("name"),
-			Schedule:  simplechecksgo.F("schedule"),
-			TargetURL: simplechecksgo.F("https://example.com"),
-			TimeoutMs: simplechecksgo.F(int64(0)),
-			Type:      simplechecksgo.F("type"),
+			Name:   simplechecksgo.F("name"),
+			Target: simplechecksgo.F("target"),
+			Type:   simplechecksgo.F(simplechecksgo.AlertChannelUpdateParamsTypeSlack),
 		},
 	)
 	if err != nil {
@@ -109,7 +97,7 @@ func TestCheckUpdateWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestCheckListWithOptionalParams(t *testing.T) {
+func TestAlertChannelListWithOptionalParams(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -121,9 +109,9 @@ func TestCheckListWithOptionalParams(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	_, err := client.Checks.List(context.TODO(), simplechecksgo.CheckListParams{
+	_, err := client.AlertChannels.List(context.TODO(), simplechecksgo.AlertChannelListParams{
+		Cursor: simplechecksgo.F("cursor"),
 		Limit:  simplechecksgo.F(int64(1)),
-		Offset: simplechecksgo.F(int64(0)),
 	})
 	if err != nil {
 		var apierr *simplechecksgo.Error
@@ -134,7 +122,7 @@ func TestCheckListWithOptionalParams(t *testing.T) {
 	}
 }
 
-func TestCheckDelete(t *testing.T) {
+func TestAlertChannelDelete(t *testing.T) {
 	baseURL := "http://localhost:4010"
 	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
 		baseURL = envURL
@@ -146,7 +134,29 @@ func TestCheckDelete(t *testing.T) {
 		option.WithBaseURL(baseURL),
 		option.WithAPIKey("My API Key"),
 	)
-	err := client.Checks.Delete(context.TODO(), "id")
+	err := client.AlertChannels.Delete(context.TODO(), "id")
+	if err != nil {
+		var apierr *simplechecksgo.Error
+		if errors.As(err, &apierr) {
+			t.Log(string(apierr.DumpRequest(true)))
+		}
+		t.Fatalf("err should be nil: %s", err.Error())
+	}
+}
+
+func TestAlertChannelTestFire(t *testing.T) {
+	baseURL := "http://localhost:4010"
+	if envURL, ok := os.LookupEnv("TEST_API_BASE_URL"); ok {
+		baseURL = envURL
+	}
+	if !testutil.CheckTestServer(t, baseURL) {
+		return
+	}
+	client := simplechecksgo.NewClient(
+		option.WithBaseURL(baseURL),
+		option.WithAPIKey("My API Key"),
+	)
+	_, err := client.AlertChannels.TestFire(context.TODO(), "id")
 	if err != nil {
 		var apierr *simplechecksgo.Error
 		if errors.As(err, &apierr) {
