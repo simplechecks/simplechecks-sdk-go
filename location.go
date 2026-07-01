@@ -66,8 +66,14 @@ type Location struct {
 	Location string `json:"location" api:"required"`
 	// Cloud provider.
 	Provider string `json:"provider" api:"required"`
-	// Live garrison status. `unprovisioned` means the location is code-defined but no
-	// garrison row exists yet (deploy pending); dashboard typically greys these out.
+	// Live garrison status as reported by command-center. The endpoint returns the
+	// garrison's stored status verbatim, so this enum lists every value the state
+	// machine can surface: `provisioning` — a garrison row exists but is not yet
+	// serving; `ready` — serving normally; `degraded` — serving but a broken-probe
+	// signal is firing; `unprovisioned` — the location is code-defined but no garrison
+	// row exists yet (deploy pending), typically greyed out in the dashboard;
+	// `draining`, `maintenance`, `scaling` — sticky operator-set states that automated
+	// transitions preserve rather than clobber.
 	Status LocationStatus `json:"status" api:"required"`
 	// Metro-center latitude (degrees, WGS84).
 	Lat float64 `json:"lat"`
@@ -124,20 +130,29 @@ func (r LocationContinent) IsKnown() bool {
 	return false
 }
 
-// Live garrison status. `unprovisioned` means the location is code-defined but no
-// garrison row exists yet (deploy pending); dashboard typically greys these out.
+// Live garrison status as reported by command-center. The endpoint returns the
+// garrison's stored status verbatim, so this enum lists every value the state
+// machine can surface: `provisioning` — a garrison row exists but is not yet
+// serving; `ready` — serving normally; `degraded` — serving but a broken-probe
+// signal is firing; `unprovisioned` — the location is code-defined but no garrison
+// row exists yet (deploy pending), typically greyed out in the dashboard;
+// `draining`, `maintenance`, `scaling` — sticky operator-set states that automated
+// transitions preserve rather than clobber.
 type LocationStatus string
 
 const (
+	LocationStatusProvisioning  LocationStatus = "provisioning"
 	LocationStatusReady         LocationStatus = "ready"
+	LocationStatusDegraded      LocationStatus = "degraded"
+	LocationStatusUnprovisioned LocationStatus = "unprovisioned"
 	LocationStatusDraining      LocationStatus = "draining"
 	LocationStatusMaintenance   LocationStatus = "maintenance"
-	LocationStatusUnprovisioned LocationStatus = "unprovisioned"
+	LocationStatusScaling       LocationStatus = "scaling"
 )
 
 func (r LocationStatus) IsKnown() bool {
 	switch r {
-	case LocationStatusReady, LocationStatusDraining, LocationStatusMaintenance, LocationStatusUnprovisioned:
+	case LocationStatusProvisioning, LocationStatusReady, LocationStatusDegraded, LocationStatusUnprovisioned, LocationStatusDraining, LocationStatusMaintenance, LocationStatusScaling:
 		return true
 	}
 	return false
