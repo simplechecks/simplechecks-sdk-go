@@ -123,6 +123,119 @@ func (r *OffsetAutoPager[T]) Index() int {
 	return r.run
 }
 
+type IncidentsOffset[T any] struct {
+	Incidents  []T                 `json:"incidents"`
+	NextOffset int64               `json:"next_offset" api:"nullable"`
+	JSON       incidentsOffsetJSON `json:"-"`
+	cfg        *requestconfig.RequestConfig
+	res        *http.Response
+}
+
+// incidentsOffsetJSON contains the JSON metadata for the struct
+// [IncidentsOffset[T]]
+type incidentsOffsetJSON struct {
+	Incidents   apijson.Field
+	NextOffset  apijson.Field
+	raw         string
+	ExtraFields map[string]apijson.Field
+}
+
+func (r *IncidentsOffset[T]) UnmarshalJSON(data []byte) (err error) {
+	return apijson.UnmarshalRoot(data, r)
+}
+
+func (r incidentsOffsetJSON) RawJSON() string {
+	return r.raw
+}
+
+// GetNextPage returns the next page as defined by this pagination style. When
+// there is no next page, this function will return a 'nil' for the page value, but
+// will not return an error
+func (r *IncidentsOffset[T]) GetNextPage() (res *IncidentsOffset[T], err error) {
+	if len(r.Incidents) == 0 {
+		return nil, nil
+	}
+	cfg := r.cfg.Clone(r.cfg.Context)
+
+	q := cfg.Request.URL.Query()
+	offset, err := strconv.ParseInt(q.Get("offset"), 10, 64)
+	if err != nil {
+		offset = 0
+	}
+	length := int64(len(r.Incidents))
+	next := offset + length
+
+	if length > 0 && next != 0 {
+		err = cfg.Apply(option.WithQuery("offset", strconv.FormatInt(next, 10)))
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		return nil, nil
+	}
+	var raw *http.Response
+	cfg.ResponseInto = &raw
+	cfg.ResponseBodyInto = &res
+	err = cfg.Execute()
+	if err != nil {
+		return nil, err
+	}
+	res.SetPageConfig(cfg, raw)
+	return res, nil
+}
+
+func (r *IncidentsOffset[T]) SetPageConfig(cfg *requestconfig.RequestConfig, res *http.Response) {
+	if r == nil {
+		r = &IncidentsOffset[T]{}
+	}
+	r.cfg = cfg
+	r.res = res
+}
+
+type IncidentsOffsetAutoPager[T any] struct {
+	page *IncidentsOffset[T]
+	cur  T
+	idx  int
+	run  int
+	err  error
+}
+
+func NewIncidentsOffsetAutoPager[T any](page *IncidentsOffset[T], err error) *IncidentsOffsetAutoPager[T] {
+	return &IncidentsOffsetAutoPager[T]{
+		page: page,
+		err:  err,
+	}
+}
+
+func (r *IncidentsOffsetAutoPager[T]) Next() bool {
+	if r.page == nil || len(r.page.Incidents) == 0 {
+		return false
+	}
+	if r.idx >= len(r.page.Incidents) {
+		r.idx = 0
+		r.page, r.err = r.page.GetNextPage()
+		if r.err != nil || r.page == nil || len(r.page.Incidents) == 0 {
+			return false
+		}
+	}
+	r.cur = r.page.Incidents[r.idx]
+	r.run += 1
+	r.idx += 1
+	return true
+}
+
+func (r *IncidentsOffsetAutoPager[T]) Current() T {
+	return r.cur
+}
+
+func (r *IncidentsOffsetAutoPager[T]) Err() error {
+	return r.err
+}
+
+func (r *IncidentsOffsetAutoPager[T]) Index() int {
+	return r.run
+}
+
 type RunsCursor[T any] struct {
 	Runs       []T            `json:"runs"`
 	NextCursor string         `json:"next_cursor" api:"nullable"`
