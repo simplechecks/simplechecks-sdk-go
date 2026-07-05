@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.3.0...v0.3.1) (2026-07-05)
+
+
+### Bug Fixes
+
+* **ci:** pin release-please action to v3.8.1 ([1a8597b](https://github.com/simplechecks/simplechecks-sdk-go/commit/1a8597b14b8ad91008d76d0682dbb043404f5fda))
+* **ci:** supply release-type to release-please ([80aff67](https://github.com/simplechecks/simplechecks-sdk-go/commit/80aff671795a2541dc6c58fd2e64a07edee89d21))
+
 ## 0.3.0 (2026-07-01)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.2.0...v0.3.0)
