@@ -55,7 +55,9 @@ func (r *CheckService) New(ctx context.Context, body CheckNewParams, opts ...opt
 }
 
 // Returns the check with the given id. 404 if no such check exists for the calling
-// account. Requires the `checks:read` scope.
+// account. Requires the `checks:read` scope. The response carries the check's full
+// saved configuration — schedule, target, timeout, and enabled state — plus its
+// created/updated timestamps.
 func (r *CheckService) Get(ctx context.Context, id string, opts ...option.RequestOption) (res *Check, err error) {
 	opts = slices.Concat(r.Options, opts)
 	if id == "" {
