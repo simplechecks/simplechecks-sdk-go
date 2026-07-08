@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.4.0 (2026-07-08)
+
+Full Changelog: [v0.3.0...v0.4.0](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.3.0...v0.4.0)
+
+### Features
+
+* **api:** api update ([b2abbe9](https://github.com/simplechecks/simplechecks-sdk-go/commit/b2abbe9753966cdac033300ec46c79b80dbe1707))
+
+
+### Bug Fixes
+
+* **ci:** pin release-please action to v3.8.1 ([1a8597b](https://github.com/simplechecks/simplechecks-sdk-go/commit/1a8597b14b8ad91008d76d0682dbb043404f5fda))
+* **ci:** supply release-type to release-please ([80aff67](https://github.com/simplechecks/simplechecks-sdk-go/commit/80aff671795a2541dc6c58fd2e64a07edee89d21))
+
+
+### Chores
+
+* **ci:** add stlc release workflows (U9) ([aeaf263](https://github.com/simplechecks/simplechecks-sdk-go/commit/aeaf2637434666fb72000b78910d7554f2dd14c7))
+
+
+### Documentation
+
+* **api:** clarify getCheck response body ([326ca3a](https://github.com/simplechecks/simplechecks-sdk-go/commit/326ca3aa600fac989800ea0648985d054c38ee42))
+
 ## 0.3.0 (2026-07-01)
 
 Full Changelog: [v0.2.0...v0.3.0](https://github.com/simplechecks/simplechecks-sdk-go/compare/v0.2.0...v0.3.0)
